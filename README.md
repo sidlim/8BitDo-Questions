@@ -30,7 +30,7 @@ A set of userscripts meant to let folks do practice questions using an Anki Remo
 2. Install the userscript for your question platform of choice. Follow your userscript extension's directions to install a userscript. Links to userscripts: [Amboss](https://github.com/sidlim/8BitDo-Questions/blob/main/amboss.user.js)
 3. Toggle the userscript on for the Amboss website.
 ### Amboss:
-1. Connect your controller
+1. Connect your controller, in keyboard mode
 2. Open up a question session
 3. Map your keys
 4. Do questions!
