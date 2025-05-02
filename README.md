@@ -11,7 +11,7 @@ A set of userscripts meant to let folks do practice questions using an Anki Remo
     - [ ] Image expansion
     - [ ] Lab reference value screen
     - [ ] Explanation Link expansion
-    - [ ] Keymapping
+    - [x] Keymapping
 - UWorld
     - [x] Answer selection
     - [ ] Answer submission
@@ -22,15 +22,12 @@ A set of userscripts meant to let folks do practice questions using an Anki Remo
     - [ ] Keymapping
 
 ## Use Instructions:
-### Amboss/UWorld:
+1. You will need a browser extension that lets you run userscripts. I like [TamperMonkey](https://www.tampermonkey.net) but there are several options you can use that will work equally well. Install the extension and give it the recommended set of permissions.
+2. Install the userscript for your question platform of choice. Follow your userscript extension's directions to install a userscript. Links to userscripts: [Amboss](https://github.com/sidlim/8BitDo-Questions/blob/main/amboss.user.js)
+### Amboss:
 1. Connect your controller
-2. Ensure your keymappings from the controller to the keyboard (in Karabiner Elements or your keymapping software of choice) are correct, as given below. This should cease to be an issue once the keymapping feature is supported, but until then this step will complicate things.
-3. Open up a question session
-4. Run the corresponding script (amboss.js or uworld.js) in the developer console.
-### Keyboard Controls:
-- Up/Down arrows: previous or next answer choice, respectively
-- Left/Right arrows: previous or next question, respectively
-- Enter: Select/Expand answer
-- Backspace: Strikethrough answer
-### Keymapping:
-- Not yet functional; requires interception of registered event handlers, which I believe can't be done in Firefox (my main browser), so I've left this to a side for now.
+2. Open up a question session
+3. Map your keys
+4. Do questions!
+### Uworld:
+Work in progress, not at all ready to use. I don't personally use UWorld as much, so I'm not as speedy with development here. If you're looking for something, feel free to fork and develop.
