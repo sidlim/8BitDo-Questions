@@ -2,21 +2,21 @@ function getKeyDown() {
     // Prepare for asynchronous output:
     return new Promise((resolve) => {
         // Listen for a keydown and send the key code to our keymapper
-        document.addEventListener('keydown', onKeyHandler);
-        function onKeyHandler(e) {
+        document.addEventListener('keydown', (e) => {
             e.stopImmediatePropagation();
-            //e.preventDefault();
-            resolve(e.key);
-        }
+            e.preventDefault();
+            resolve(e.key)
+        }, {once: true})
     });
 }
 
 function awaitKeyUp() {
     return new Promise((resolve) => {
         document.addEventListener('keyup', (e) => {
+            e.stopImmediatePropagation();
             e.preventDefault();
             resolve(e.key)
-        })
+        }, {once: true})
     })
 }
 

@@ -6,24 +6,30 @@ let answerChoices = answerBox.childNodes;
 let nextButton = document.querySelectorAll('button[data-e2e-test-id="next-button"]')[0];
 let prevButton = document.querySelectorAll('button[data-e2e-test-id="prev-button"]')[0];
 
+
+
 // Code for dealing with answers:
+// Send a click to confirm an answer
 function dispatchAnswerClick(answerChoiceRoot) {
     answerChoiceRoot.childNodes[0].childNodes[0].dispatchEvent(new Event('click', {'bubbles': true}))
 }
 
+// Send a click to strikethrough an answer
 function dispatchAnswerStrikethrough(answerChoiceRoot) {
     answerChoiceRoot.childNodes[0].childNodes[1].childNodes[0].dispatchEvent(new Event('click', {'bubbles': true}))
 }
 
+// Update the background color of the answer to show it's selected
 function focusAnswer(answerChoiceRoot) {
     answerChoiceRoot.childNodes[0].style.background = 'var(--color-background-transparent-hover)';
 }
 
+// Update the background color of the answer to show it's been unselected
 function defocusAnswer(answerChoiceRoot) {
     answerChoiceRoot.childNodes[0].style.background = '';
 }
 
-// Code for packaging up answer controls into a nice format that our script can nicely interact with:
+// Code for packaging up each answer's controls into a nice format that our script can nicely interact with:
 function makeAnswerNode(answerChoiceRoot) {
     let answerNode = {};
     answerNode.focus = () => {focusAnswer(answerChoiceRoot)}
@@ -44,21 +50,39 @@ function makeAnswerNode(answerChoiceRoot) {
     return(answerNode);
 }
 
+// extend the prior function to deal with arrays of answers:
+function makeAnswerList(answerChoiceArray) {
+    Array.prototype.map.call(answerChoiceArray, makeAnswerNode);
+}
+
 // Instantiate our controller:
-let answerList = Array.prototype.map.call(answerChoices, makeAnswerNode);
+let answerList = makeAnswerList(answerChoices);
 let activeIndex = 0;
 answerList[activeIndex].focus();
 
-function initializeController() {
+// When the question changes, the answerBox and promptBox nodes get thrown out
+// So we need a way to update the references to the new active answerBox and promptBox.
+// Then we can run our focus code again and we're good for user interaction.
+function updateController() {
+    console.log(promptBox, answerBox)
+    promptBox = document.querySelectorAll('div[class=""]')[2];
+    answerBox = document.querySelectorAll('div[class=""]')[3];
+    answerChoices = answerBox.childNodes;
     answerList = Array.prototype.map.call(answerChoices, makeAnswerNode);
     activeIndex = 0;
     answerList[activeIndex].focus();
-    console.log('reinitialized');
+    console.log('initializeController');
 };
 
 // Clamping the focused element and handling next/previous answer choice logic:
 function nextChoice() {
-    if (activeIndex < answerList.length - 1) {
+    // sometimes the question takes some time to load and updateController (which was called by the kepress handler) fails
+    // this is because the answer DOM elements are removed immediately, but the application takes some time to populate
+    // them back. the delay between removal and repopulation is annoying to deal with, so I'm going to just 
+    if (!answerBox) {
+        updateController();
+    }
+    else if (activeIndex < answerList.length - 1) {
         answerList[activeIndex].defocus();
         activeIndex = activeIndex + 1;
         answerList[activeIndex].focus();
@@ -66,7 +90,10 @@ function nextChoice() {
 }
 
 function prevChoice() {
-    if (activeIndex > 0) {
+    if (!answerBox) {
+        updateController();
+    }
+    else if (activeIndex > 0) {
         answerList[activeIndex].defocus();
         activeIndex = activeIndex - 1;
         answerList[activeIndex].focus();
@@ -84,62 +111,34 @@ function prevQuestion() {
 
 let delay = 0;
 
+// Detach document onkeydown handler:
+let keyDownHandler = document.onkeydown;
+document.onkeydown = null;
+
 // Do our key mapping:
-/*let actionMap = {
+let actionMap = {
     'Select Answer': () => {answerList[activeIndex].interact('pick');},
     'Strikethrough Answer': () => {answerList[activeIndex].interact('ruleout');},
     'Previous Answer': () => {prevChoice();},
     'Next Answer': () => {nextChoice();},
     'Previous Question': () => {
         prevQuestion();
-        setTimeout(initializeController, delay);
+        setTimeout(updateController, delay);
     },
     'Next Question': () => {
         nextQuestion();
-        setTimeout(initializeController, delay);
+        setTimeout(updateController, delay);
     }
 }
 let prompts = Object.keys(actionMap);
-createKeyMapping(prompts, console.log).then((keyMap) => {
+createKeyMapping(prompts, alert).then((keyMap) => {
     console.log(keyMap)
     document.addEventListener('keydown', (e) => {
         if (keyMap.has(e.key)) {
             e.stopImmediatePropagation();
-            e.preventDefault();
+            //e.preventDefault();
             let action = keyMap.get(e.key);
             actionMap[action]();
         }
     }, true)
 });
-*/
-// Old Key Listener - deprecated because it doesn't play well with the keymapper
-document.addEventListener('keydown', (e) => {
-    switch (e.key) {
-        case "Enter":
-            e.preventDefault();
-            answerList[activeIndex].interact('pick');
-            break;
-        case "Backspace":
-            e.preventDefault();
-            answerList[activeIndex].interact('ruleout');
-            break;
-        case "ArrowUp":
-            e.preventDefault();
-            prevChoice();
-            break;
-        case "ArrowDown":
-            e.preventDefault();
-            nextChoice();
-            break;
-        case "ArrowRight":
-            e.preventDefault();
-            setTimeout(initializeController, delay);
-            break;
-        case "ArrowLeft":
-            e.preventDefault();
-            setTimeout(initializeController, delay);
-            break;
-        default:
-            break;
-    }
-})
