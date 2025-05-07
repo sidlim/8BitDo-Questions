@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        AmKey
 // @namespace   AmKey
-// @version     1.0
+// @version     1.0.1
 // @description Remap keys (from 8BitDo or other Anki Controllers) to interact with Amboss Sessions
 // @match       *://*.amboss.com/*
 // @grant       none
@@ -12,7 +12,7 @@ let AmKey = (function() {
     // Setup our references to the page elements:
     let questionBox = document.querySelectorAll('div[class=""]')[1];
     let promptBox = document.querySelectorAll('div[class=""]')[2];
-    let answerBox = document.querySelectorAll('div[class=""]')[3];
+    let answerBox = document.querySelectorAll('div[data-e2e-test-id|="answer-theme"]')[0].parentElement;
     let answerChoices = answerBox.childNodes;
     let nextButton = document.querySelectorAll('button[data-e2e-test-id="next-button"]')[0];
     let prevButton = document.querySelectorAll('button[data-e2e-test-id="prev-button"]')[0];
@@ -68,9 +68,8 @@ let AmKey = (function() {
     // So we need a way to update the references to the new active answerBox and promptBox.
     // Then we can run our focus code again and we're good for user interaction.
     function updateController() {
-        console.log(promptBox, answerBox)
         promptBox = document.querySelectorAll('div[class=""]')[2];
-        answerBox = document.querySelectorAll('div[class=""]')[3];
+        answerBox = document.querySelectorAll('div[data-e2e-test-id|="answer-theme"]')[0].parentElement;
         answerChoices = answerBox.childNodes;
         answerList = Array.prototype.map.call(answerChoices, makeAnswerNode);
         activeIndex = 0;
