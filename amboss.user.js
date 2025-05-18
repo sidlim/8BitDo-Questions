@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        AmKey
 // @namespace   AmKey
-// @version     1.0.1
+// @version     1.0.2
 // @description Remap keys (from 8BitDo or other Anki Controllers) to interact with Amboss Sessions
 // @match       *://*.amboss.com/*
 // @grant       none
