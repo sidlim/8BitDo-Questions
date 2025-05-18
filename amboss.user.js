@@ -14,6 +14,7 @@ let AmKey = (function() {
     let promptBox = document.querySelectorAll('div[class=""]')[2];
     let answerBox = document.querySelectorAll('div[data-e2e-test-id|="answer-theme"]')[0].parentElement;
     let answerChoices = answerBox.childNodes;
+    let media = document.querySelector('[class*=mediaViewerTrigger]');
     let nextButton = document.querySelectorAll('button[data-e2e-test-id="next-button"]')[0];
     let prevButton = document.querySelectorAll('button[data-e2e-test-id="prev-button"]')[0];
 
@@ -71,6 +72,7 @@ let AmKey = (function() {
         promptBox = document.querySelectorAll('div[class=""]')[2];
         answerBox = document.querySelectorAll('div[data-e2e-test-id|="answer-theme"]')[0].parentElement;
         answerChoices = answerBox.childNodes;
+        media = document.querySelector('[class*=mediaViewerTrigger]');
         answerList = Array.prototype.map.call(answerChoices, makeAnswerNode);
         activeIndex = 0;
         answerList[activeIndex].focus();
@@ -186,6 +188,9 @@ let AmKey = (function() {
         'Next Question': () => {
             nextQuestion();
             setTimeout(updateController, delay);
+        },
+        'Open Media': () => {
+            if (media) {media.click()}
         }
     }
     let prompts = Object.keys(actionMap);
